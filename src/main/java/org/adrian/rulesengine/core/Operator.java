@@ -67,6 +67,18 @@ public enum Operator {
             return false;
         }
     },
+    IN {
+        @Override
+        public boolean test(Object left, Object right) {
+            if (isNull(left, right)) {
+                return false;
+            }
+            if (right instanceof Collection) {
+                return ((Collection<?>) right).contains(left);
+            }
+            return false;
+        }
+    },
     EQUALS_IGNORE_CASE {
         @Override
         public boolean test(Object left, Object right) {

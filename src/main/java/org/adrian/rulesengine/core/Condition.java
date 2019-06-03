@@ -9,8 +9,8 @@ import java.util.function.Predicate;
 /**
  * The basic condition, we might also call it "leaf" condition (compared to {@link CombinedCondition}).
  * E.g. color = "blue". Contains the right hand value ({@link #getValue()}, "blue"),
- * the operator ({@link #getOperator(), "="}),
- * and the function to retrieve the right hand value ({@link #getFieldAccessor(), color}.
+ * the operator ({@link #getOperator()}, "="),
+ * and the function to retrieve the right hand value ({@link #getFieldAccessor()}, color).
  * @param <S> the type of the source, e.g. a java bean, xml or json etc.
  * @param <T> the type of the field to be retrieved
  */

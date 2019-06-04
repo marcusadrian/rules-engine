@@ -19,6 +19,11 @@ public class Rule<S> {
     private final List<Predicate<S>> predicates;
     private final Consumer<S> action;
 
+    public Rule(Predicate<S> predicate, Consumer<S> action) {
+        this.predicates = List.of(predicate);
+        this.action = action;
+    }
+
     /**
      * Only testing the conditions ({@code predicates}).
      * @param source the source, e.g. a java bean, xml or json etc.

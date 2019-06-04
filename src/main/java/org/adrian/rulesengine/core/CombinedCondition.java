@@ -14,8 +14,8 @@ import java.util.function.Predicate;
 @AllArgsConstructor
 public class CombinedCondition<S> implements Predicate<S> {
 
-    private final List<Predicate<S>> predicates;
     private final Combinator combinator;
+    private final List<Predicate<S>> predicates;
 
     @Override
     public boolean test(S s) {

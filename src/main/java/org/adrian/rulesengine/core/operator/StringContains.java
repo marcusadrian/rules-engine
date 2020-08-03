@@ -1,14 +1,17 @@
 package org.adrian.rulesengine.core.operator;
 
-public class StringContains extends AbstractOperator<String, String> {
+import lombok.Builder;
+
+@Builder
+public class StringContains extends AbstractStringOperator {
 
     @Override
-    protected boolean testIgnoreNull(String left, String right) {
+    protected boolean doTest(String left, String right) {
         return left.contains(right);
     }
 
     @Override
-    public String getSymbol() {
+    protected String getRawSymbol() {
         return "contains";
     }
 }

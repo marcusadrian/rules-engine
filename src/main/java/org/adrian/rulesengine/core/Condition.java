@@ -2,6 +2,7 @@ package org.adrian.rulesengine.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.adrian.rulesengine.core.operator.Operator;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,6 +35,6 @@ public class Condition<S, T> implements Predicate<S> {
 
     @Override
     public boolean test(S source) {
-        return operator.test(fieldAccessor.apply(source), value);
+        return this.operator.test(this.fieldAccessor.apply(source), this.value);
     }
 }

@@ -1,7 +1,7 @@
 package org.adrian.rulesengine.core.operator;
 
 import lombok.Builder;
-
+// TODO écrire builder
 @Builder
 public class StringEquals extends AbstractStringOperator {
     

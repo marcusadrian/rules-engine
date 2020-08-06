@@ -1,14 +1,14 @@
 package org.adrian.rulesengine.core.operator;
 
-public abstract class AbstractOperator<T, U> implements Operator<T, U> {
+public abstract class AbstractOperator<L, R> implements Operator<L, R> {
 
     @Override
-    public boolean test(T left, U right) {
+    public boolean test(L left, R right) {
         if (left == null || right == null) {
             return false;
         }
         return this.testIgnoreNull(left, right);
     }
 
-    protected abstract boolean testIgnoreNull(T left, U right);
+    protected abstract boolean testIgnoreNull(L left, R right);
 }

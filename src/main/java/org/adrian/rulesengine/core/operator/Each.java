@@ -3,11 +3,11 @@ package org.adrian.rulesengine.core.operator;
 import java.util.Collection;
 import java.util.function.BiPredicate;
 
-public class Each<T, U> {
+public class Each<L, R> {
 
-    private BiPredicate<T, U> operator;
+    private BiPredicate<L, R> operator;
 
-    protected boolean test(Collection<? extends T> left, U right) {
+    protected boolean test(Collection<? extends L> left, R right) {
         return left.stream().allMatch(e -> this.operator.test(e, right));
     }
 }

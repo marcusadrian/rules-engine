@@ -10,13 +10,13 @@ abstract class AbstractStringOperator extends AbstractOperator<String, String> {
         private boolean ignoreCase;
         private boolean ignoreBlanks;
 
-        public T ignoreCase(boolean ignoreCase) {
-            this.ignoreCase = ignoreCase;
+        public T ignoreCase() {
+            this.ignoreCase = true;
             return this.self();
         }
 
-        public T ignoreBlanks(boolean ignoreBlanks) {
-            this.ignoreBlanks = ignoreBlanks;
+        public T ignoreBlanks() {
+            this.ignoreBlanks = true;
             return this.self();
         }
 

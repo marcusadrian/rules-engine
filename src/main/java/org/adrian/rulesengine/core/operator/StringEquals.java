@@ -9,8 +9,8 @@ public class StringEquals extends AbstractStringOperator {
 
         private boolean acceptNull;
 
-        public T acceptNull(boolean acceptNull) {
-            this.acceptNull = acceptNull;
+        public T acceptNull() {
+            this.acceptNull = true;
             return this.self();
         }
     }

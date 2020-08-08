@@ -1,9 +1,23 @@
 package org.adrian.rulesengine.core.operator;
 
-import lombok.Builder;
-// TODO écrire builder
-@Builder
 public class StringContains extends AbstractStringOperator {
+
+    protected abstract static class AbstractBuilder<T extends StringContains.AbstractBuilder<T>>
+            extends AbstractStringOperator.AbstractBuilder<T> {
+
+    }
+
+    public static class Builder extends AbstractBuilder<Builder> {
+
+        @Override
+        public StringContains build() {
+            return new StringContains(this);
+        }
+    }
+
+    protected StringContains(AbstractBuilder<?> builder) {
+        super(builder);
+    }
 
     @Override
     protected boolean doTest(String left, String right) {

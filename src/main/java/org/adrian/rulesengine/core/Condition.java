@@ -2,6 +2,7 @@ package org.adrian.rulesengine.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.adrian.rulesengine.core.execution.ConditionExecution;
 import org.adrian.rulesengine.core.execution.RuleExecution;
 import org.adrian.rulesengine.core.operator.Operator;
 
@@ -25,9 +26,6 @@ public class Condition<S, L, R> implements BiPredicate<S, RuleExecution<S>> {
     /**
      * The function to retrieve the left hand value.
      * E.g. condition : color = "blue" this would be the function to retrieve the color.
-     *
-     * @param <S> the type of the source, e.g. a java bean, xml or json etc.
-     * @param <T> the type of the field to be retrieved
      */
     private final Function<S, L> fieldAccessor;
     /**
@@ -38,9 +36,13 @@ public class Condition<S, L, R> implements BiPredicate<S, RuleExecution<S>> {
 
     @Override
     public boolean test(S source, RuleExecution<S> ruleExecution) {
-        ruleExecution.startCondition(this);
-        return this.operator.test(
-                this.fieldAccessor.apply(source),
-                this.value);
+        ConditionExecution<S, L, R> conditionExecution = ruleExecution.newConditionExecution(this);
+        return conditionExecution
+                .leftValue(this.fieldAccessor.apply(source))
+                .testResult(this.operator.test(
+                        conditionExecution.getLeftValue(),
+                        this.value))
+                .getTestResult();
+
     }
 }

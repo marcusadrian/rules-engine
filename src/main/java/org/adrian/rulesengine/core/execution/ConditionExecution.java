@@ -2,30 +2,30 @@ package org.adrian.rulesengine.core.execution;
 
 import org.adrian.rulesengine.core.Condition;
 
-public class ConditionExecution<S> {
-    private final Condition<S, ?, ?> condition;
-    private final Object leftValue;
+public class ConditionExecution<S, L, R> {
+    private final Condition<S, L, R> condition;
+    private final L leftValue;
 
-    public static class Builder<S> {
-        private Condition<S, ?, ?> condition;
-        private Object leftValue;
+    public static class Builder<S, L, R> {
+        private Condition<S, L, R> condition;
+        private L leftValue;
 
-        public Builder<S> condition(Condition<S, ?, ?> condition) {
+        public Builder<S, L, R> condition(Condition<S, L, R> condition) {
             this.condition = condition;
             return this;
         }
 
-        public Builder<S> leftValue(Object leftValue) {
+        public Builder<S, L, R> leftValue(L leftValue) {
             this.leftValue = leftValue;
             return this;
         }
 
-        public ConditionExecution<S> build() {
+        public ConditionExecution<S, L, R> build() {
             return new ConditionExecution<>(this);
         }
     }
 
-    private ConditionExecution(Builder<S> builder) {
+    private ConditionExecution(Builder<S, L, R> builder) {
         this.condition = builder.condition;
         this.leftValue = builder.leftValue;
     }

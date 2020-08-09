@@ -2,10 +2,11 @@ package org.adrian.rulesengine.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.adrian.rulesengine.core.execution.RuleExecution;
 import org.adrian.rulesengine.core.operator.Operator;
 
+import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * The basic condition, we might also call it "leaf" condition (compared to {@link CombinedCondition}).
@@ -13,13 +14,13 @@ import java.util.function.Predicate;
  * the operator ({@link #getOperator()}, "="),
  * and the function to retrieve the right hand value ({@link #getFieldAccessor()}, color).
  *
- * @param <S> the type of the source, e.g. a java bean, xml or json etc.
+ * @param <S> the type of the source
  * @param <L> the type of the field to be retrieved
  * @param <R> the expected value of the field which makes the condition comply
  */
 @RequiredArgsConstructor
 @Getter
-public class Condition<S, L, R> implements Predicate<S> {
+public class Condition<S, L, R> implements BiPredicate<S, RuleExecution<S>> {
     private final Operator<L, R> operator;
     /**
      * The function to retrieve the left hand value.
@@ -36,7 +37,10 @@ public class Condition<S, L, R> implements Predicate<S> {
     private final R value;
 
     @Override
-    public boolean test(S source) {
-        return this.operator.test(this.fieldAccessor.apply(source), this.value);
+    public boolean test(S source, RuleExecution<S> ruleExecution) {
+        ruleExecution.startCondition(this);
+        return this.operator.test(
+                this.fieldAccessor.apply(source),
+                this.value);
     }
 }

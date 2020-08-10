@@ -24,19 +24,19 @@ public class Operators {
         return EQ;
     }
 
-    public static <T> LowerThan<T> lt() {
+    public static <T extends Comparable<? super T>> LowerThan<T> lt() {
         return LT;
     }
 
-    public static <T> LowerThanOrEquals<T> le() {
+    public static <T extends Comparable<? super T>> LowerThanOrEquals<T> le() {
         return LE;
     }
 
-    public static <T> GreaterThan<T> gt() {
+    public static <T extends Comparable<? super T>> GreaterThan<T> gt() {
         return GT;
     }
 
-    public static <T> GreaterThanOrEquals<T> ge() {
+    public static <T extends Comparable<? super T>> GreaterThanOrEquals<T> ge() {
         return GE;
     }
 

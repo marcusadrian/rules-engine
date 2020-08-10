@@ -2,10 +2,12 @@ package org.adrian.rulesengine.core.sample;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.adrian.rulesengine.core.Combinator;
 import org.adrian.rulesengine.core.CombinedCondition;
 import org.adrian.rulesengine.core.Condition;
 import org.adrian.rulesengine.core.Rule;
+import org.adrian.rulesengine.core.execution.RuleExecution;
 import org.adrian.rulesengine.core.operator.Operators;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 class Sample {
 
     @Test
@@ -22,8 +25,9 @@ class Sample {
         var rule = new Rule<>(condition, voiture -> voiture.paint("red"));
 
         var car = new Car("white", 256);
-        rule.fire(car);
+        RuleExecution<Car> ruleExecution = rule.fire(car);
         assertThat(car.getColor()).isEqualTo("red");
+        log.info("{}", ruleExecution);
     }
 
     @Test

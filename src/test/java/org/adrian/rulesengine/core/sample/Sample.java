@@ -30,18 +30,18 @@ class Sample {
         log.info("{}", ruleExecution);
     }
 
-//    @Test
-//    void combinatedConditionCase() {
-//        // Rule : if the power of the car is greater than 250 OR color is grey, paint it red
-//        var powerCondition = new Condition<>(Operators.gt(), Car::getPower, 250);
-//        var colorCondition = new Condition<>(Operators.String.eq().ignoreCase().build(), Car::getColor, "grey");
-//        var combinedCondition = new CombinedCondition<>(Combinator.OR, List.of(powerCondition, colorCondition));
-//        var rule = new Rule<>(combinedCondition, voiture -> voiture.paint("red"));
-//
-//        var car = new Car("grey", 150);
-//        rule.fire(car);
-//        assertThat(car.getColor()).isEqualTo("red");
-//    }
+    @Test
+    void combinatedConditionCase() {
+        // Rule : if the power of the car is greater than 250 OR color is grey, paint it red
+        var powerCondition = new Condition<>(Operators.gt(), Car::getPower, 250);
+        var colorCondition = new Condition<>(Operators.String.eq().ignoreCase().build(), Car::getColor, "grey");
+        var combinedCondition = new CombinedCondition<>(Combinator.OR, List.of(powerCondition, colorCondition));
+        var rule = new Rule<>(combinedCondition, voiture -> voiture.paint("red"));
+
+        var car = new Car("grey", 150);
+        rule.fire(car);
+        assertThat(car.getColor()).isEqualTo("red");
+    }
 
     @Getter
     @AllArgsConstructor

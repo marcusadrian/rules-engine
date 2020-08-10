@@ -7,13 +7,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * A rule takes some {@code source}, tests it against some conditions ({@code predicates})
  * and applies some {@code action} if the conditions are met.
  *
- * @param <S> the type of the source, e.g. a java bean, xml or json etc.
+ * @param <S> the type of the source
  */
 @AllArgsConstructor
 public class Rule<S> {
@@ -28,12 +27,13 @@ public class Rule<S> {
 
     /**
      * Only testing the conditions ({@code predicates}).
-     * @param source the source, e.g. a java bean, xml or json etc.
+     *
+     * @param source the source
      * @return {@code true} if all conditions (predicates) are met, otherwise {@code false}
      */
     public RuleExecution<S> test(S source) {
         RuleExecution<S> execution = new RuleExecution<>();
-        boolean executionResult = predicates
+        boolean executionResult = this.predicates
                 .stream()
                 .allMatch(p -> p.test(source, execution));
         return execution.executionResult(executionResult);
@@ -42,19 +42,19 @@ public class Rule<S> {
     /**
      * Testing the conditions ({@code predicates}) and applying the {@code action}
      * only in the case the conditions are met.
-     * @param source the source, e.g. a java bean, xml or json etc.
+     * @param source the source
      */
     public RuleExecution<S> fire(S source) {
-        RuleExecution<S> execution = test(source);
+        RuleExecution<S> execution = this.test(source);
         if (execution.getExecutionResult()) {
-            action.accept(source);
+            this.action.accept(source);
         }
         return execution;
     }
 
     /**
      * Calling {@link #fire(Object)} for every single element in the passed in collection.
-     * @param sources the sources, e.g. java beans, xml or json objects etc.
+     * @param sources the sources
      */
     public void fire(Collection<? extends S> sources) {
         sources.forEach(this::fire);

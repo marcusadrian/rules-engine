@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 public class Rule<S> {
 
     private final List<BiPredicate<S, RuleExecution<S>>> predicates;
-    private final Consumer<S> action;
+    private final BiConsumer<S, RuleExecution<S>> action;
 
     public static <S> Builder<S> builder(Class<S> clazz) {
         return new Builder<>();
@@ -28,7 +29,7 @@ public class Rule<S> {
     public static class Builder<S> {
 
         private final List<BiPredicate<S, RuleExecution<S>>> predicates = new ArrayList<>();
-        private Consumer<S> action = s -> {
+        private BiConsumer<S, RuleExecution<S>> action = (s, r) -> {
         };
 
         private Builder() {
@@ -44,8 +45,13 @@ public class Rule<S> {
             return this;
         }
 
-        public Builder<S> action(@NonNull Consumer<S> action) {
+        public Builder<S> action(@NonNull BiConsumer<S, RuleExecution<S>> action) {
             this.action = action;
+            return this;
+        }
+
+        public Builder<S> action(@NonNull Consumer<S> action) {
+            this.action = (s, r) -> action.accept(s);
             return this;
         }
 
@@ -82,7 +88,7 @@ public class Rule<S> {
     public RuleExecution<S> fire(S source) {
         RuleExecution<S> execution = this.test(source);
         if (execution.getExecutionResult()) {
-            this.action.accept(source);
+            this.action.accept(source, execution);
         }
         return execution;
     }

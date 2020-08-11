@@ -11,8 +11,6 @@ import org.adrian.rulesengine.core.execution.RuleExecution;
 import org.adrian.rulesengine.core.operator.Operators;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -21,8 +19,10 @@ class Sample {
     @Test
     void simpleCase() {
         // Rule : if the power of the car is greater than 250, paint it red
-        var condition = new Condition<>(Operators.gt(), Car::getPower, 250);
-        var rule = new Rule<>(condition, voiture -> voiture.paint("red"));
+        Rule<Car> rule = Rule.builder(Car.class)
+                .addPredicate(new Condition<>(Operators.gt(), Car::getPower, 250))
+                .action(voiture -> voiture.paint("red"))
+                .build();
 
         var car = new Car("white", 256);
         RuleExecution<Car> ruleExecution = rule.fire(car);
@@ -33,10 +33,15 @@ class Sample {
     @Test
     void combinatedConditionCase() {
         // Rule : if the power of the car is greater than 250 OR color is grey, paint it red
-        var powerCondition = new Condition<>(Operators.gt(), Car::getPower, 250);
-        var colorCondition = new Condition<>(Operators.String.eq().ignoreCase().build(), Car::getColor, "grey");
-        var combinedCondition = new CombinedCondition<>(Combinator.OR, List.of(powerCondition, colorCondition));
-        var rule = new Rule<>(combinedCondition, voiture -> voiture.paint("red"));
+        CombinedCondition<Car> combinedCondition = CombinedCondition.builder(Car.class, Combinator.OR)
+                .addPredicate(new Condition<>(Operators.gt(), Car::getPower, 250))
+                .addPredicate(new Condition<>(Operators.String.eq().ignoreCase().build(), Car::getColor, "grey"))
+                .build();
+
+        Rule<Car> rule = Rule.builder(Car.class)
+                .addPredicate(combinedCondition)
+                .action(voiture -> voiture.paint("red"))
+                .build();
 
         var car = new Car("grey", 150);
         rule.fire(car);

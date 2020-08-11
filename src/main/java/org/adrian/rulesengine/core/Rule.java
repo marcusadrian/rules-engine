@@ -1,9 +1,11 @@
 package org.adrian.rulesengine.core;
 
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.adrian.rulesengine.core.execution.RuleExecution;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -14,15 +16,47 @@ import java.util.function.Consumer;
  *
  * @param <S> the type of the source
  */
-@AllArgsConstructor
 public class Rule<S> {
 
     private final List<BiPredicate<S, RuleExecution<S>>> predicates;
     private final Consumer<S> action;
 
-    public Rule(BiPredicate<S, RuleExecution<S>> predicate, Consumer<S> action) {
-        this.predicates = List.of(predicate);
-        this.action = action;
+    public static <S> Builder<S> builder(Class<S> clazz) {
+        return new Builder<>();
+    }
+
+    public static class Builder<S> {
+
+        private final List<BiPredicate<S, RuleExecution<S>>> predicates = new ArrayList<>();
+        private Consumer<S> action = s -> {
+        };
+
+        private Builder() {
+        }
+
+        public Builder<S> addPredicate(@NonNull BiPredicate<S, RuleExecution<S>> predicate) {
+            this.predicates.add(predicate);
+            return this;
+        }
+
+        public Builder<S> addAllPredicates(@NonNull Collection<BiPredicate<S, RuleExecution<S>>> predicates) {
+            predicates.addAll(predicates);
+            return this;
+        }
+
+        public Builder<S> action(@NonNull Consumer<S> action) {
+            this.action = action;
+            return this;
+        }
+
+        public Rule<S> build() {
+            return new Rule<>(this);
+        }
+    }
+
+    private Rule(Builder<S> builder) {
+        this.predicates = Collections.unmodifiableList(builder.predicates);
+        this.action = builder.action;
     }
 
     /**
@@ -42,6 +76,7 @@ public class Rule<S> {
     /**
      * Testing the conditions ({@code predicates}) and applying the {@code action}
      * only in the case the conditions are met.
+     *
      * @param source the source
      */
     public RuleExecution<S> fire(S source) {
@@ -54,6 +89,7 @@ public class Rule<S> {
 
     /**
      * Calling {@link #fire(Object)} for every single element in the passed in collection.
+     *
      * @param sources the sources
      */
     public void fire(Collection<? extends S> sources) {

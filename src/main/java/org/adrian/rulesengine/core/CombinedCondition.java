@@ -1,6 +1,7 @@
 package org.adrian.rulesengine.core;
 
 import lombok.NonNull;
+import org.adrian.rulesengine.core.execution.CombinedConditionExecution;
 import org.adrian.rulesengine.core.execution.RuleExecution;
 
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
 
     @Override
     public boolean test(S s, RuleExecution<S> ruleExecution) {
-        return this.combinator.test(this.predicates, s, ruleExecution);
+        CombinedConditionExecution<S> execution = ruleExecution.newCombinedConditionExecution(this);
+        execution.testResult(this.combinator.test(this.predicates, s, ruleExecution));
+        ruleExecution.endCombinedConditionExecution();
+        return execution.getTestResult();
     }
 }

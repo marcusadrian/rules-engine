@@ -18,9 +18,10 @@ class Sample {
 
     @Test
     void simpleCase() {
-        // Rule : if the power of the car is greater than 250, paint it red
+        // Rule : if the power of white car is greater than 250, paint it red
         Rule<Car> rule = Rule.builder(Car.class)
                 .addPredicate(new Condition<>(Operators.gt(), Car::getPower, 250))
+                .addPredicate(new Condition<>(Operators.String.eq().ignoreCase().build(), Car::getColor, "WHITE"))
                 .action(voiture -> voiture.paint("red"))
                 .build();
 
@@ -44,8 +45,9 @@ class Sample {
                 .build();
 
         var car = new Car("grey", 150);
-        rule.fire(car);
+        RuleExecution<Car> ruleExecution = rule.fire(car);
         assertThat(car.getColor()).isEqualTo("red");
+        // log.info("{}", ruleExecution);
     }
 
     @Getter

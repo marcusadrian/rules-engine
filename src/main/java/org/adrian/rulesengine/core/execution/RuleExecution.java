@@ -1,6 +1,7 @@
 package org.adrian.rulesengine.core.execution;
 
 import lombok.Getter;
+import org.adrian.rulesengine.core.Combinator;
 import org.adrian.rulesengine.core.CombinedCondition;
 import org.adrian.rulesengine.core.Condition;
 
@@ -10,12 +11,15 @@ import java.util.LinkedList;
 @Getter
 public class RuleExecution<S> {
 
-    // private List<ConditionExecution<S, ?, ?>> conditionExecutions = new ArrayList<>();
     private Deque<CombinedConditionExecution<S>> executions = new LinkedList<>();
-    private final CombinedConditionExecution<S> root = new CombinedConditionExecution<>();
+    private final CombinedConditionExecution<S> root;
     private Boolean executionResult;
 
     public RuleExecution() {
+        this.root = new CombinedConditionExecution<>();
+        this.root.combinedCondition((CombinedCondition<S>) CombinedCondition
+                .builder(Object.class, Combinator.AND)
+                .build());
         this.executions.add(this.root);
     }
 
@@ -38,5 +42,12 @@ public class RuleExecution<S> {
 
     public void endCombinedConditionExecution() {
         this.executions.removeLast();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s -> %s",
+                this.root.toString(),
+                this.executionResult);
     }
 }

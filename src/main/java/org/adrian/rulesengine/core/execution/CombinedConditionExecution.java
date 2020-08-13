@@ -30,4 +30,11 @@ public class CombinedConditionExecution<S> {
         this.elements.add(new CombinedConditionExecutionElement<>(combinedConditionExecution));
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s -> %s",
+                this.combinedCondition.getCombinator(),
+                this.elements,
+                this.testResult);
+    }
 }

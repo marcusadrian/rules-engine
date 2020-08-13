@@ -1,5 +1,6 @@
 package org.adrian.rulesengine.core;
 
+import lombok.Getter;
 import lombok.NonNull;
 import org.adrian.rulesengine.core.execution.CombinedConditionExecution;
 import org.adrian.rulesengine.core.execution.RuleExecution;
@@ -20,6 +21,7 @@ import java.util.function.Predicate;
  */
 public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
 
+    @Getter
     private final Combinator combinator;
     private final List<BiPredicate<S, RuleExecution<S>>> predicates;
 

@@ -22,4 +22,13 @@ public class ConditionExecution<S, L, R> {
         this.testResult = testResult;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s -> %s",
+                this.leftValue,
+                this.condition.getOperator().getSymbol(),
+                this.condition.getValue(),
+                this.testResult);
+    }
 }

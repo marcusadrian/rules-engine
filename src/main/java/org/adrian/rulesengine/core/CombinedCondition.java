@@ -24,7 +24,6 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
     @Getter
     private final Combinator combinator;
     private final List<BiPredicate<S, RuleExecution<S>>> predicates;
-    private static final CombinedCondition<?> ROOT = new CombinedCondition<>();
 
     public static <S> Builder<S> builder(Class<S> clazz, Combinator combinator) {
         return new Builder<>(clazz, combinator);

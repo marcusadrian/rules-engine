@@ -1,7 +1,6 @@
 package org.adrian.rulesengine.core.execution;
 
 import lombok.Getter;
-import org.adrian.rulesengine.core.Combinator;
 import org.adrian.rulesengine.core.CombinedCondition;
 import org.adrian.rulesengine.core.Condition;
 
@@ -17,9 +16,7 @@ public class RuleExecution<S> {
 
     public RuleExecution() {
         this.root = new CombinedConditionExecution<>();
-        this.root.combinedCondition((CombinedCondition<S>) CombinedCondition
-                .builder(Object.class, Combinator.AND)
-                .build());
+        this.root.combinedCondition(CombinedCondition.root());
         this.executions.add(this.root);
     }
 
@@ -37,6 +34,7 @@ public class RuleExecution<S> {
 
     public RuleExecution<S> executionResult(Boolean executionResult) {
         this.executionResult = executionResult;
+        this.root.testResult(executionResult);
         return this;
     }
 
@@ -46,8 +44,6 @@ public class RuleExecution<S> {
 
     @Override
     public String toString() {
-        return String.format("%s -> %s",
-                this.root.toString(),
-                this.executionResult);
+        return this.root.toString();
     }
 }

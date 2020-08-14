@@ -5,11 +5,13 @@ import org.adrian.rulesengine.core.CombinedCondition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CombinedConditionExecution<S> {
     private CombinedCondition<S> combinedCondition;
     @Getter
     private Boolean testResult;
+    @Getter
     private List<CombinedConditionExecutionElement<S>> elements = new ArrayList<>();
 
     public CombinedConditionExecution<S> combinedCondition(CombinedCondition<S> combinedCondition) {
@@ -33,7 +35,9 @@ public class CombinedConditionExecution<S> {
     @Override
     public String toString() {
         return String.format("%s %s -> %s",
-                this.combinedCondition.getCombinator(),
+                Optional.ofNullable(this.combinedCondition)
+                        .map(CombinedCondition::getCombinator)
+                        .orElse(null),
                 this.elements,
                 this.testResult);
     }

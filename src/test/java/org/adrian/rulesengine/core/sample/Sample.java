@@ -47,7 +47,7 @@ class Sample {
         var car = new Car("grey", 150);
         RuleExecution<Car> ruleExecution = rule.fire(car);
         assertThat(car.getColor()).isEqualTo("red");
-        // log.info("{}", ruleExecution);
+        log.info("{}", ruleExecution);
     }
 
     @Getter

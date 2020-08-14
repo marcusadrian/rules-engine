@@ -23,6 +23,7 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
 
     @Getter
     private final Combinator combinator;
+    @Getter
     private final List<BiPredicate<S, RuleExecution<S>>> predicates;
 
     public static <S> Builder<S> builder(Class<S> clazz, Combinator combinator) {
@@ -43,7 +44,7 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
         }
 
         public Builder<S> addAllPredicates(@NonNull Collection<BiPredicate<S, RuleExecution<S>>> predicates) {
-            predicates.addAll(predicates);
+            this.predicates.addAll(predicates);
             return this;
         }
 
@@ -55,11 +56,6 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
     private CombinedCondition(Builder<S> builder) {
         this.predicates = Collections.unmodifiableList(builder.predicates);
         this.combinator = builder.combinator;
-    }
-
-    private CombinedCondition() {
-        this.predicates = Collections.emptyList();
-        this.combinator = Combinator.AND;
     }
 
     @Override

@@ -19,20 +19,22 @@ import java.util.function.Consumer;
  */
 public class Rule<S> {
 
-    private final List<BiPredicate<S, RuleExecution<S>>> predicates;
+    private CombinedCondition<S> root;
     private final BiConsumer<S, RuleExecution<S>> action;
 
     public static <S> Builder<S> builder(Class<S> clazz) {
-        return new Builder<>();
+        return new Builder<>(clazz);
     }
 
     public static class Builder<S> {
 
+        private final Class<S> clazz;
         private final List<BiPredicate<S, RuleExecution<S>>> predicates = new ArrayList<>();
         private BiConsumer<S, RuleExecution<S>> action = (s, r) -> {
         };
 
-        private Builder() {
+        private Builder(Class<S> clazz) {
+            this.clazz = clazz;
         }
 
         public Builder<S> addPredicate(@NonNull BiPredicate<S, RuleExecution<S>> predicate) {
@@ -61,7 +63,9 @@ public class Rule<S> {
     }
 
     private Rule(Builder<S> builder) {
-        this.predicates = Collections.unmodifiableList(builder.predicates);
+        this.root = CombinedCondition.builder(builder.clazz, Combinator.AND)
+                .addAllPredicates(Collections.unmodifiableList(builder.predicates))
+                .build();
         this.action = builder.action;
     }
 
@@ -73,10 +77,20 @@ public class Rule<S> {
      */
     public RuleExecution<S> test(S source) {
         RuleExecution<S> execution = new RuleExecution<>();
-        boolean executionResult = this.predicates
-                .stream()
-                .allMatch(p -> p.test(source, execution));
+        this.cleanupRoot();
+        boolean executionResult = this.root.test(source, execution);
         return execution.executionResult(executionResult);
+    }
+
+    // strip off outer AND CombinedCondition if unnecessary
+    private void cleanupRoot() {
+        List<BiPredicate<S, RuleExecution<S>>> predicates = this.root.getPredicates();
+        if (predicates.size() == 1) {
+            BiPredicate<S, RuleExecution<S>> predicate = predicates.get(0);
+            if (predicate instanceof CombinedCondition) {
+                this.root = (CombinedCondition<S>) predicate;
+            }
+        }
     }
 
     /**

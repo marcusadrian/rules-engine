@@ -11,7 +11,7 @@ import java.util.LinkedList;
 @Getter
 public class RuleExecution<S> {
 
-    private Deque<CombinedConditionExecution<S>> executions = new LinkedList<>();
+    private final Deque<CombinedConditionExecution<S>> executions = new LinkedList<>();
     private final CombinedConditionExecution<S> root;
     private Boolean executionResult;
 

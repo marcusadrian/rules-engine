@@ -63,10 +63,6 @@ public class CombinedCondition<S> implements BiPredicate<S, RuleExecution<S>> {
         this.combinator = Combinator.AND;
     }
 
-    public static <S> CombinedCondition<S> root() {
-        return (CombinedCondition<S>) ROOT;
-    }
-
     @Override
     public boolean test(S s, RuleExecution<S> ruleExecution) {
         CombinedConditionExecution<S> execution = ruleExecution.newCombinedConditionExecution(this);

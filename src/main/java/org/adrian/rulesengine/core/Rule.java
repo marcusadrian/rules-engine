@@ -57,6 +57,11 @@ public class Rule<S> {
             return this;
         }
 
+        public Builder<S> action(@NonNull Runnable action) {
+            this.action = (s, r) -> action.run();
+            return this;
+        }
+
         public Rule<S> build() {
             return new Rule<>(this);
         }
